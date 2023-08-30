@@ -1,7 +1,7 @@
 import React, { useContext, useState } from "react";
 import "../register/register.css";
 import FormInput from "../../components/formInput/FormInput";
-import { FaFacebook } from "react-icons/fa";
+import { AiFillEyeInvisible, AiFillEye } from "react-icons/ai";
 import { Link, useNavigate } from "react-router-dom";
 import { auth, provider } from "../../firebase";
 import {
@@ -11,7 +11,6 @@ import {
 } from "firebase/auth";
 import { AuthContext } from "../../context/AuthContext";
 
-
 const Register = () => {
   const { dispatch } = useContext(AuthContext);
   const [inputValues, setInputValues] = useState({
@@ -20,56 +19,49 @@ const Register = () => {
     password: "",
     confirmPassword: "",
   });
-
+  const [inputType, setInputType] = useState("password");
+  const [toggleEye, setToggleEye] = useState(false);
+  const [inputs, setInputs] = useState({
+    email: "",
+    password: "",
+  });
+  const handleToggle = (e) => {
+    setToggleEye(!toggleEye);
+    setInputType(inputType === "password" ? "text" : "password");
+  };
+  const handleChanges = (e) => {
+    setInputs((prev) => ({ ...prev, [e.target.name]: e.target.value }));
+  };
 
   const navigate = useNavigate();
   // inputs
 
-const inputs = [
-  {
-    id: 1,
-    name: "username",
-    type: "text",
-    placeholder: "Username",
-    errorMessage:
-      "Username should be 3-16 characters and shouldn't include any special character",
-    pattern: "^[A-Za-z0-9]{3,16}$",
-    required: true,
-  },
-  {
-    id: 2,
-    name: "email",
-    type: "email",
-    placeholder: "Email",
-    errorMessage: "It should be a valid email address",
-    required: true,
-  },
-  {
-    id: 3,
-    name: "password",
-    type: "text",
-    placeholder: "Password",
-    errorMessage:
-      "Password should be 8-20 characters and include at least 1 letter, 1 number, 1 special character",
-    pattern: `(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#$%^&*()_+])[A-Za-z0-9!@#$%^&*()_+]{8,20}$`,
-    required: true,
-  },
-  {
-    id: 4,
-    name: "confirmPassword",
-    type: "text",
-    placeholder: "Confirm Password",
-    errorMessage: "Passwords don't match",
-    pattern: inputValues.password,
-    required: true,
-  },
-];
+  const inputes = [
+    {
+      id: 1,
+      name: "username",
+      type: "text",
+      placeholder: "Username",
+      errorMessage:
+        "Username should be 3-16 characters and shouldn't include any special character",
+      pattern: "^[A-Za-z0-9]{3,16}$",
+      required: true,
+    },
+    {
+      id: 2,
+      name: "email",
+      type: "email",
+      placeholder: "Email",
+      errorMessage: "It should be a valid email address",
+      required: true,
+    },
+  ];
 
   // handle change
   const handleChange = (e) => {
     setInputValues({ ...inputValues, [e.target.name]: e.target.value });
   };
-  console.log(inputValues)
+  console.log(inputValues);
 
   // handle register
 
@@ -91,7 +83,7 @@ const inputs = [
       });
     } catch (error) {}
   };
-// sign in 
+  // sign in
   const signInWithGoogle = () => {
     dispatch({ type: "LOGIN_START" });
 
@@ -108,15 +100,10 @@ const inputs = [
       });
   };
 
-
-
-
-
-
   return (
     <div className="register">
       <form>
-        {inputs.map((input) => (
+        {inputes.map((input) => (
           <FormInput
             key={input.id}
             {...input}
@@ -124,6 +111,33 @@ const inputs = [
             onChange={handleChange}
           />
         ))}
+        <div className="formInput">
+          <input
+            type={inputType}
+            name="password"
+            id="password"
+            placeholder="Password"
+            onChange={handleChanges}
+            required
+          />
+          <div className="eyeIcon" onClick={handleToggle}>
+            {toggleEye ? <AiFillEye /> : <AiFillEyeInvisible />}
+          </div>
+        </div>
+        <div className="formInput">
+          <input
+            type="text"
+            placeholder=" confirm Password"
+            onPaste={(e) => {
+              e.preventDefault();
+              alert("donot copy the password");
+            }}
+            onCopy={(e) => {
+              e.preventDefault();
+              return false;
+            }}
+          />
+        </div>
 
         <button type="submit" onClick={handleRegister}>
           Register
@@ -142,7 +156,7 @@ const inputs = [
         </div>
         {/* facebook login */}
         <div className="line"></div>
-        
+
         <div className="media-options">
           <Link
             to="#"

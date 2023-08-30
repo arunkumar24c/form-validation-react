@@ -1,7 +1,7 @@
 import React, { useContext, useState } from "react";
 import ".././login/login.css";
 import { Link, useNavigate } from "react-router-dom";
-import { FaFacebook } from "react-icons/fa";
+
 import { AiFillEyeInvisible, AiFillEye } from "react-icons/ai";
 import { auth, provider } from "../../firebase";
 import { signInWithEmailAndPassword, signInWithPopup } from "firebase/auth";
